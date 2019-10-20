@@ -1,0 +1,176 @@
+=============================================================================
+Nume: Damian Stefania-Dorina
+Grupa: 312CD
+=============================================================================
+
+
+Tema 3 - TetriPic
+
+    Pentru rezolvarea cerintei am facut un program in care am folosit functii
+pentru realizarea diferitelor cerinte si simplificarea codului. Am inclus si
+cateva fisiere header care contin functii folosite in cadrul realizarii mai
+multor cerinte.
+    M-am folosit de matrice alocate dinamic pentru a retine unitatile din
+cadrul pieselor si al tablei de joc. De asemenea, am codificat culorile
+pentru a retine mai usor matricele de unitati. Codificarea este urmatoare:
+    * -1 = negru
+    * 0 = alb
+    * 1 = galben
+    * 2 = albastru
+    * 3 = rosu
+    * 4 = verde
+    * 5 = portocaliu
+    * 6 = roz
+    * 7 = mov
+
+    Fisierele header folosite si functiile si structurile din cadrul lor
+sunt urmatoarele:
+
+1) bmp_header.h:
+- contine structuri pentru retinerea informatiilor din fisierele .bmp
+
+    1. bmp_fileheader:
+    - este o structura care retine in campurile sale informatiile din
+    fileheader-ul fisierelor .bmp folosite
+
+    2. bmp_infoheader:
+    - este o structura care retine in campurile sale informatiile din
+    infoheader-ul fisierelor .bmp folosite
+
+2) functions.h:
+- contine functii elementare folosite pentru realizarea cerintelor
+
+    1. set_bmp_info:
+    - seteaza valorile implicite ale informatiilor din fileheader si
+    infoheader, cu exceptia campurilor: bfSize, width, height si biSizeImage
+    care vor fi setate pe parcursul programului
+
+    2. write_bmp_info:
+    - scrie in fisierul .bmp informatiile din fileheader si infiheader
+
+    3. O_units, I_units, S_units, Z_units, L_units, J_units, T_units:
+    - creeaza matricea de unitati a piesei O, I, S, Z, L, J, respectiv T
+    cu chenarul alb, modificand valorile parametrilor prin care transmite
+    informatiile in program
+
+    4. choose_colour:
+    - modifica valorile r, g si b in functie de codul culorii specifice
+
+    5. choose_color_value:
+    - intoarce codificarea culorii in functie de valorile r, g, b
+    - codifica cu 0 si zonele negre pentru a simplifica algoritmul, ele
+    vor fi recodificate in program
+ 
+    6. write_bmp:
+    - scrie informatiile necesare in fisierul .bmp
+
+    7. rotate_90_degrees:
+    - matricea primita ca parametru este inlocuita cu rotatia sa la 90 de
+    grade in sensul acelor de ceas
+    - foloseste o matrice auxiliara alocata dinamic
+
+    8. read_bmp_info:
+    - citeste informatiile din fileheader si infoheader si seteaza valoarea
+    padding-ului
+
+    9. read_bmp:
+    - citeste matricea de pixeli din fisierul .bmp si creeaza matricea de
+    unitati a tablei de joc
+    - pentru tabla de joc de aloca doua linii in plus pentru bordarea matricei
+    pentru rezolvarea cerintei bonus
+
+3) game.h:
+- contine functii pentru implementarea jocului de tetris
+
+    1. choose_piece:
+    - genereaza piesa necesara fara chenarul alb, folosind o piesa auxiliara
+
+    2. collision:
+    - verifica daca piesa mai poate cobori
+    - intoarce 0 daca nu e coliziune si 1 in caz contrar
+
+    3. add_piece_to_game_map:
+    - adauga piesa pe tabla de joc
+
+    4. end_game:
+    - verifica daca este indeplinita conditia de sfarsit de joc
+    - intoarce 1 daca o piesa depaseste zona neagra si 0 in caz contrar
+
+    5. line_to_delete:
+    - cauta o linie plina care trebuie stearsa si o intoarce, sau intoarce
+    -1 daca aceasta nu exista
+
+    6. delete_full_line:
+    - sterge linia plina si coboara restul pieselor de deasupra acesteia
+
+    7. go_down:
+    - coboara piesa pe tabla de joc, verificand conditia de final de joc si
+    eventual elimina liniile pline
+
+    8. play:
+    - realizeaza jocul de tetris, citind piesele si coordonatele lor din fisier
+
+    Fisierele sursa sunt urmatoarele:
+
+1) task1.c:
+- genereaza cele 7 piese cu chenarul alb
+
+2) task2.c:
+- genereaza cele 3 rotatii pentru fiecare piesa
+    1. rotiri:
+    - este o structura care retine in campurile sale numele fisierelor output
+
+    2. generate_rotations:
+    - genereaza rotatiile fiecarei piese
+    - foloseste un vector de pointeri cate functiile de generare a pieselor
+    care sunt rotite
+
+3) task3.c:
+-realizeaza jocul de tetris cu o tabla de joc goala ale carei dimensiuni
+sunt citite din fisierul cerinta3.in alaturi de piesele care trebuie adaugate
+conform cerintei
+
+4) task4.c:
+-realizeaza jocul de tetris cu o tabla citita din cerinta4.bmp si adauga
+piesele din cerinta4.in conform cerintei
+
+5) bonus.c:
+- identifica numarul pieselor, piesele, rotatiile lor si coloana pe care se
+afla cea mai din stanga patratica a fiecarei piese, informatii scrise in 
+fisierul bonus.out
+
+    1. piece_info:
+    - structura pentru vectorul pieces alocat dinamic in care se retin
+    tipul piesei, rotatia si coloana celei mai din stanga patratice
+
+    2. piece_type:
+    - in functie de codificarea numarului primit ca parametru, intoarce
+    tipul piesei (O, I, S, Z, L, J sau T)
+
+    3. board:
+    - bordeaza cu -1 matricea unitatilor pentru tabla de joc
+
+    4. find_color_group:
+    - pornind de la o unitate din cadrul tablei de joc, functia cauta
+    unitatile care formeaza un bloc de aceeasi culoare, setand valorile
+    pentru extremitatile acestuia (top, bottom, left, right) si modifica
+    in program valoarea numarului de unitati gasite cu ajutorul caruia
+    se calculeaza numarul de piese care formeaza blocul respectiv
+    - viz este o matrice care retine daca zonele din tabla de joc au fost
+    vizitate deja
+
+    5. next_unit:
+    - merge mai departe in tabla de joc in cadrul limitelor specificate
+    - nu depaseste matricea deoarece la un moment dat, in cautarea piesei,
+    ea va fi sigur gasita
+
+    6. identify_piece:
+    - identifica piesele dintr-un bloc de culoare si scrie informatiile cerute
+    despre acestea in vectorul pieces de tip piece_info
+    - functia este de tip backtracking deoarece exista posibilitatea sa gasim
+    o piesa care se potriveste in submatricea data, dar sa nu fie amplasata
+    corect pentru a gasi si celelalte piese
+    - in cadrul limitelor date de top, bottom, left si right se poate gasi o
+    piesa in afara blocului dat; daca aceasta se afla in intregime, poate fi
+    considerata ca fiind parte din blocul de culoare, piesa neglijata din bloc
+    urmand sa fie analizata ulterior in program
